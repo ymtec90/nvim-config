@@ -64,3 +64,16 @@ if vim.fn.has("mac") == 1 then
 else
   vim.opt.clipboard = "unnamedplus"
 end
+
+-- Altera os símbolos para diagnóstico
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = " ",
+      [vim.diagnostic.severity.WARN]  = " ",
+      [vim.diagnostic.severity.HINT]  = " ",
+      [vim.diagnostic.severity.INFO]  = " ",
+    },
+  },
+})
+

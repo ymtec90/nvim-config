@@ -15,6 +15,20 @@ vim.lsp.config.lua_ls = {
   },
 }
 
+vim.lsp.config.basedpyright = {
+    settings = {
+        basedpyright = {
+            analysis = {
+                typeCheckingMode = "standard",
+            },
+        },
+    },
+    on_attach = function(client, bufnr)
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false
+    end,
+}
+
 -- Lista de servidores a serem ativados
 local servers = {
   "html",
