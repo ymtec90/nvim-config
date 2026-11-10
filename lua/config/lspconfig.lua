@@ -59,9 +59,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		if client.name == "ruff" then
 			client.server_capabilities.hoverProvider = false
 		end
-
-		-- O Neovim já mapeia K, grn, gra, grr, gri, gO, [d, ]d; falta o gd.
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = buf, desc = "LSP: definição" })
 	end,
 })
 

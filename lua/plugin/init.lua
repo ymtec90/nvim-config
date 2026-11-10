@@ -1,9 +1,3 @@
-local function dap(fn)
-	return function()
-		require("dap")[fn]()
-	end
-end
-
 return {
 	{
 		"ellisonleao/gruvbox.nvim",
@@ -12,6 +6,18 @@ return {
 		config = function()
 			vim.cmd([[colorscheme gruvbox]])
 			require("config.navic")
+			require("config.neotree")
+		end,
+	},
+
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+		},
+		config = function()
+			require("config.which-key")
 		end,
 	},
 
@@ -236,15 +242,8 @@ return {
 			"MunifTanjim/nui.nvim",
 			"nvim-tree/nvim-web-devicons",
 		},
-		keys = {
-			{ "<leader>e", "<cmd>Neotree toggle<cr>", desc = "󰙅 Open/Close Neotree" },
-		},
-		opts = {
-			source_selector = {
-				winbar = true,
-				statusline = false,
-			},
-		},
+		cmd = "Neotree",
+		opts = require("config.neotree").options,
 	},
 
 	{
@@ -294,69 +293,150 @@ return {
 			"mfussenegger/nvim-dap-python",
 			"leoluz/nvim-dap-go",
 		},
-		keys = {
-			{ "<F5>", dap("continue"), desc = "Debug: iniciar/continuar" },
-			{ "<F10>", dap("step_over"), desc = "Debug: step over" },
-			{ "<F11>", dap("step_into"), desc = "Debug: step into" },
-			{ "<F12>", dap("step_out"), desc = "Debug: step out" },
-			{ "<leader>b", dap("toggle_breakpoint"), desc = "Debug: breakpoint" },
-			{
-				"<leader>B",
-				function()
-					require("dap").set_breakpoint(vim.fn.input("Condição: "))
-				end,
-				desc = "Debug: breakpoint condicional",
-			},
-			{
-				"<leader>dl",
-				function()
-					require("dap").set_breakpoint(nil, nil, vim.fn.input("Log: "))
-				end,
-				desc = "Debug: logpoint",
-			},
-			{ "<leader>dc", dap("run_to_cursor"), desc = "Debug: rodar até o cursor" },
-			{ "<leader>dL", dap("run_last"), desc = "Debug: repetir a última sessão" },
-			{ "<leader>dt", dap("terminate"), desc = "Debug: encerrar" },
-			{
-				"<leader>dr",
-				function()
-					require("dap").repl.toggle()
-				end,
-				desc = "Debug: REPL",
-			},
-			{
-				"<leader>du",
-				function()
-					require("dapui").toggle()
-				end,
-				desc = "Debug: interface",
-			},
-			{
-				"<leader>de",
-				function()
-					require("dapui").eval()
-				end,
-				mode = { "n", "x" },
-				desc = "Debug: avaliar expressão",
-			},
-			-- Teste sob o cursor (Go e Python)
-			{
-				"<leader>dT",
-				function()
-					local ft = vim.bo.filetype
-					if ft == "go" then
-						require("dap-go").debug_test()
-					elseif ft == "python" then
-						require("dap-python").test_method()
-					else
-						vim.notify("Debug de teste sob o cursor: só Go e Python", vim.log.levels.WARN)
-					end
-				end,
-				desc = "Debug: teste sob o cursor",
-			},
-		},
 		config = function()
 			require("config.dap")
+		end,
+	},
+
+	{
+		"folke/lazydev.nvim",
+		ft = "lua",
+		opts = {
+			library = {
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+			},
+		},
+	},
+
+	{
+		"brianhuster/live-preview.nvim",
+		cmd = "LivePreview",
+		opts = {
+			port = 8081,
+			browser = "default",
+		},
+		keys = {
+			{ "<leader>lp", ":LivePreview<CR>", desc = "Iniciar Live Preview" },
+		},
+	},
+
+	{
+		"windwp/nvim-ts-autotag",
+		ft = {
+			"html",
+			"javascriptreact",
+			"typescriptreact",
+			"htmldjango",
+			"php",
+			"blade",
+		},
+		config = function()
+			require("nvim-ts-autotag").setup()
+		end,
+	},
+
+	{
+		"kristijanhusak/vim-dadbod-ui",
+		dependencies = {
+			{ "tpope/vim-dadbod", lazy = true },
+			{ "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
+		},
+		cmd = {
+			"DBUI",
+			"DBUIToggle",
+			"DBUIAddConnection",
+			"DBUIFindBuffer",
+		},
+		init = function()
+			vim.g.db_ui_use_nerd_fonts = 1
+		end,
+	},
+
+	{
+		"hiphish/rainbow-delimiters.nvim",
+		event = "User FilePost",
+		config = function()
+			require("config.rb-delimiters")
+		end,
+	},
+
+	{
+		"sindrets/diffview.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		cmd = {
+			"DiffviewOpen",
+			"DiffviewClose",
+			"DiffviewToggleFiles",
+			"DiffviewFocusFiles",
+			"DiffviewFileHistory",
+		},
+		config = function()
+			require("diffview").setup({
+				view = {
+					merge_tool = {
+						layout = "diff3_mixed",
+					},
+				},
+			})
+		end,
+	},
+
+	{
+		"NeogitOrg/neogit",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"sindrets/diffview.nvim",
+			"nvim-telescope/telescope.nvim",
+		},
+		cmd = "Neogit",
+		config = function()
+			require("neogit").setup({
+				integrations = {
+					diffview = true,
+					telescope = true,
+				},
+				kind = "tab",
+				commit_editor = {
+					kind = "split",
+				},
+			})
+		end,
+	},
+
+	{
+		"pwntester/octo.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+			"nvim-tree/nvim-web-devicons",
+		},
+		cmd = { "Octo" },
+		config = function()
+			require("octo").setup({
+				enable_builtin = true,
+				default_remote = { "upstream", "origin" },
+				suppress_missing_scope = {
+					projects_v2 = true,
+				},
+			})
+		end,
+	},
+
+	{
+		"olimorris/codecompanion.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-telescope/telescope.nvim",
+		},
+		cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
+		keys = {
+			{ "<leader>ca", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, desc = "IA Ações" },
+			{ "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "IA Chat" },
+			{ "<leader>cg", "<cmd>CodeCompanion /commit_padrao<cr>", mode = "n", desc = "IA Gerar Commit" },
+		},
+		config = function()
+			require("config.codecompanion")
 		end,
 	},
 }
