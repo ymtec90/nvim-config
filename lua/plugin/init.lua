@@ -49,6 +49,7 @@ return {
 
 	{
 		"mason-org/mason.nvim",
+		lazy = false,
 		opts = {
 			ui = {
 				icons = {
@@ -61,25 +62,28 @@ return {
 	},
 
 	{
-		"mason-org/mason-lspconfig.nvim",
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		dependencies = { "mason-org/mason.nvim" },
+		lazy = false,
 		opts = {
 			ensure_installed = {
+				"vtsls",
+				"eslint-lsp",
+				"clangd",
+				"gopls",
+				"intelephense",
+				"html-lsp",
+				"css-lsp",
+				"json-lsp",
+				"yaml-language-server",
+				"taplo",
+				"vim-language-server",
 				"basedpyright",
 				"ruff",
-				"lua_ls",
-				"stylua",
-				"html",
-				"cssls",
-				"ts_ls",
-				"emmet_ls",
+				"djlint",
+				"prettierd",
+				"blade-formatter",
 			},
-		},
-		dependencies = {
-			{
-				"mason-org/mason.nvim",
-				opts = {},
-			},
-			"neovim/nvim-lspconfig",
 		},
 	},
 
@@ -90,39 +94,17 @@ return {
 	},
 
 	{
+		"b0o/SchemaStore.nvim",
+		lazy = true,
+	},
+
+	{
 		"saghen/blink.cmp",
 		dependencies = { "rafamadriz/friendly-snippets" },
 		version = "1.*",
 		---@module "blink.cmp"
 		---@type blink.cmp.Config
-		opts = {
-			keymap = { preset = "super-tab" },
-			appearance = {
-				nerd_font_variant = "mono",
-			},
-			completion = { documentation = { auto_show = true } },
-			sources = {
-				default = { "lsp", "path", "snippets", "buffer" },
-			},
-			fuzzy = { implementation = "lua" },
-			cmdline = {
-				enabled = true,
-				keymap = {
-					preset = "cmdline",
-					["<Tab>"] = { "show_and_insert", "select_next" },
-					["<CR>"] = { "accept_and_enter", "fallback" },
-				},
-				completion = {
-					menu = {
-						auto_show = function(ctx)
-							return vim.fn.getcmdtype() == ":"
-						end,
-					},
-					ghost_text = { enabled = true },
-					list = { selection = { preselect = false, auto_insert = true } },
-				},
-			},
-		},
+		opts = require("config.blink"),
 		opts_extend = { "sources.default" },
 	},
 
@@ -146,6 +128,27 @@ return {
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		config = true,
+	},
+
+	{
+		"lewis6991/gitsigns.nvim",
+		event = { "BufReadPre", "BufNewFile" },
+	},
+
+	{
+		"brenoprata10/nvim-highlight-colors",
+		event = { "BufReadPre", "BufNewFile" },
+		opts = { render = "background", enable_named_colors = true },
+	},
+
+	{
+		"gbprod/yanky.nvim",
+		opts = { highlight = { on_yank = true, on_put = true, timer = 300 } },
+	},
+
+	{
+		"SmiteshP/nvim-navic",
+		opts = { lsp = { auto_attach = true }, highlight = true },
 	},
 
 	{
