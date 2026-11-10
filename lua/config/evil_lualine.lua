@@ -3,10 +3,10 @@ local lualine = require("lualine")
 -- stylua: ignore
 local colors = {
   bg       = '#282828',
-  fg       = '#fbf1c7',
+  fg       = '#ebdbb2',
   yellow   = '#fabd2f',
   cyan     = '#8ec07c',
-  darkblue = '#458588',
+  darkblue = '#076678',
   green    = '#b8bb26',
   orange   = '#fe8019',
   violet   = '#d3869b',
@@ -128,12 +128,6 @@ ins_left({
 	color = { fg = colors.magenta, gui = "bold" },
 })
 
-ins_left({
-	"navic",
-	cond = conditions.buffer_not_empty,
-	color = { fg = colors.green, gui = "bold" },
-})
-
 ins_left({ "location" })
 
 ins_left({ "progress", color = { fg = colors.fg, gui = "bold" } })
@@ -175,7 +169,7 @@ ins_left({
 		return msg
 	end,
 	icon = " LSP:",
-	color = { fg = "#fbf1c7", gui = "bold" },
+	color = { fg = colors.fg, gui = "bold" },
 })
 
 -- Add components to right sections

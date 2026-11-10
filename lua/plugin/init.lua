@@ -1,3 +1,9 @@
+local function dap(fn)
+	return function()
+		require("dap")[fn]()
+	end
+end
+
 return {
 	{
 		"ellisonleao/gruvbox.nvim",
@@ -5,6 +11,7 @@ return {
 		priority = 1000,
 		config = function()
 			vim.cmd([[colorscheme gruvbox]])
+			require("config.navic")
 		end,
 	},
 
@@ -83,6 +90,11 @@ return {
 				"djlint",
 				"prettierd",
 				"blade-formatter",
+				"codelldb",
+				"delve",
+				"debugpy",
+				"js-debug-adapter",
+				"php-debug-adapter",
 			},
 		},
 	},
@@ -147,8 +159,58 @@ return {
 	},
 
 	{
-		"SmiteshP/nvim-navic",
-		opts = { lsp = { auto_attach = true }, highlight = true },
+		"LunarVim/breadcrumbs.nvim",
+		dependencies = {
+			{
+				"SmiteshP/nvim-navic",
+				opts = {
+					lsp = {
+						auto_attach = true,
+					},
+					highlight = true,
+					separator = "  ",
+					depth_limit = 0,
+					icons = {
+						File = "󰈙 ",
+						Module = " ",
+						Namespace = "󰌗 ",
+						Package = " ",
+						Class = "󰌗 ",
+						Method = "󰆧 ",
+						Property = " ",
+						Field = " ",
+						Constructor = " ",
+						Enum = "󰕘 ",
+						Interface = "󰕘 ",
+						Function = "󰊕 ",
+						Variable = "󰆧 ",
+						Constant = "󰏿 ",
+						String = "󰀬 ",
+						Number = "󰎠 ",
+						Boolean = "◩ ",
+						Array = "󰅪 ",
+						Object = "󰅩 ",
+						Key = "󰌋 ",
+						Null = "󰟢 ",
+						EnumMember = " ",
+						Struct = "󰌗 ",
+						Event = " ",
+						Operator = "󰆕 ",
+						TypeParameter = "󰊄 ",
+					},
+				},
+			},
+		},
+		event = { "BufReadPost", "BufNewFile" },
+		opts = {
+			separator = "  ",
+			icons = {
+				Folder = "󰉋 ",
+			},
+		},
+		config = function(_, opts)
+			require("breadcrumbs").setup(opts)
+		end,
 	},
 
 	{
@@ -220,6 +282,81 @@ return {
 		dependecies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
 			require("config.evil_lualine")
+		end,
+	},
+
+	{
+		"mfussenegger/nvim-dap",
+		dependencies = {
+			"rcarriga/nvim-dap-ui",
+			"nvim-neotest/nvim-nio",
+			"theHamsta/nvim-dap-virtual-text",
+			"mfussenegger/nvim-dap-python",
+			"leoluz/nvim-dap-go",
+		},
+		keys = {
+			{ "<F5>", dap("continue"), desc = "Debug: iniciar/continuar" },
+			{ "<F10>", dap("step_over"), desc = "Debug: step over" },
+			{ "<F11>", dap("step_into"), desc = "Debug: step into" },
+			{ "<F12>", dap("step_out"), desc = "Debug: step out" },
+			{ "<leader>b", dap("toggle_breakpoint"), desc = "Debug: breakpoint" },
+			{
+				"<leader>B",
+				function()
+					require("dap").set_breakpoint(vim.fn.input("Condição: "))
+				end,
+				desc = "Debug: breakpoint condicional",
+			},
+			{
+				"<leader>dl",
+				function()
+					require("dap").set_breakpoint(nil, nil, vim.fn.input("Log: "))
+				end,
+				desc = "Debug: logpoint",
+			},
+			{ "<leader>dc", dap("run_to_cursor"), desc = "Debug: rodar até o cursor" },
+			{ "<leader>dL", dap("run_last"), desc = "Debug: repetir a última sessão" },
+			{ "<leader>dt", dap("terminate"), desc = "Debug: encerrar" },
+			{
+				"<leader>dr",
+				function()
+					require("dap").repl.toggle()
+				end,
+				desc = "Debug: REPL",
+			},
+			{
+				"<leader>du",
+				function()
+					require("dapui").toggle()
+				end,
+				desc = "Debug: interface",
+			},
+			{
+				"<leader>de",
+				function()
+					require("dapui").eval()
+				end,
+				mode = { "n", "x" },
+				desc = "Debug: avaliar expressão",
+			},
+			-- Teste sob o cursor (Go e Python)
+			{
+				"<leader>dT",
+				function()
+					local ft = vim.bo.filetype
+					if ft == "go" then
+						require("dap-go").debug_test()
+					elseif ft == "python" then
+						require("dap-python").test_method()
+					else
+						vim.notify("Debug de teste sob o cursor: só Go e Python", vim.log.levels.WARN)
+					end
+				end,
+				desc = "Debug: teste sob o cursor",
+			},
+		},
+		config = function()
+			require("config.dap")
 		end,
 	},
 }
