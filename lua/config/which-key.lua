@@ -173,8 +173,18 @@ wk.add({
 		desc = "Enviar para Quickfix",
 		icon = { icon = "󰁨", color = "yellow" },
 	},
-	{ "[d", vim.diagnostic.goto_prev, desc = "Diagnóstico Anterior", icon = { icon = "󰒮", color = "blue" } },
-	{ "]d", vim.diagnostic.goto_next, desc = "Próximo Diagnóstico", icon = { icon = "󰒭", color = "blue" } },
+	{
+		"[d",
+		vim.diagnostic.jump({ count = -1 }),
+		desc = "Diagnóstico Anterior",
+		icon = { icon = "󰒮", color = "blue" },
+	},
+	{
+		"]d",
+		vim.diagnostic.jump({ count = 1 }),
+		desc = "Próximo Diagnóstico",
+		icon = { icon = "󰒭", color = "blue" },
+	},
 
 	-- Navegação de Código (LSP)
 	{ "g", group = "Navegação / Definições", icon = { icon = "󰒕", color = "azure" } },
@@ -185,42 +195,22 @@ wk.add({
 	{ "K", vim.lsp.buf.hover, desc = "Hover Docs", icon = { icon = "󰋖", color = "orange" } },
 
 	-- Explorer / Neo-tree
-	{ "<leader>e", group = "Explorer (Neo-tree)", icon = { icon = "󰙅", color = "green" } },
 	{
-		"<leader>ee",
+		"<leader>e",
 		"<cmd>Neotree toggle filesystem left<cr>",
-		desc = "Alternar Explorer",
+		desc = "Abrir/Fechar Explorer",
 		icon = { icon = "󰙅", color = "green" },
 	},
 	{
-		"<leader>ef",
+		"<leader>o",
 		"<cmd>Neotree reveal<cr>",
-		desc = "Revelar Arquivo Atual",
+		desc = "Visualizar Arquivo no Explorer",
 		icon = { icon = "󰈞", color = "blue" },
 	},
 	{
-		"<leader>eb",
-		"<cmd>Neotree toggle buffers left<cr>",
-		desc = "Buffers Abertos",
-		icon = { icon = "󰕒", color = "yellow" },
-	},
-	{
-		"<leader>eg",
-		"<cmd>Neotree toggle git_status left<cr>",
-		desc = "Status do Git",
-		icon = { icon = "󰊢", color = "orange" },
-	},
-	{
-		"<leader>es",
-		"<cmd>Neotree toggle document_symbols left<cr>",
-		desc = "Símbolos LSP",
-		icon = { icon = "󰌗", color = "purple" },
-	},
-	{
-		"<leader>eF",
+		"<leader>F",
 		"<cmd>Neotree toggle float<cr>",
 		desc = "Explorer Flutuante",
 		icon = { icon = "󰉋", color = "cyan" },
 	},
-	{ "<leader>ec", "<cmd>Neotree close<cr>", desc = "Fechar Neo-tree", icon = { icon = "󰅖", color = "red" } },
 })

@@ -130,8 +130,8 @@ M.options = {
 		},
 		use_libuv_file_watcher = true,
 		filtered_items = {
-			visible = false,
-			hide_dotfiles = false,
+			visible = true,
+			hide_dotfiles = true,
 			hide_gitignored = false,
 		},
 	},
