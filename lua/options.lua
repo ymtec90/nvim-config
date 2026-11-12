@@ -1,4 +1,4 @@
--- Truecolor.
+-- Truecolor
 if vim.fn.exists("+termguicolors") == 1 then
 	if vim.fn.has("nvim") == 0 then
 		vim.opt.t_8f = "\\[38;2;%lu;%lu;%lum"
@@ -77,3 +77,7 @@ if vim.fn.has("mac") == 1 then
 else
 	vim.opt.clipboard = "unnamedplus"
 end
+
+-- Desabilitar Perl e Ruby já que eu não utilizo
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0

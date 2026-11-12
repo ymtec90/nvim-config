@@ -130,7 +130,7 @@ M.options = {
 		},
 		use_libuv_file_watcher = true,
 		filtered_items = {
-			visible = true,
+			visible = false,
 			hide_dotfiles = true,
 			hide_gitignored = false,
 		},
@@ -144,7 +144,14 @@ M.options = {
 			["s"] = "open_vsplit",
 			["S"] = "open_split",
 			["t"] = "open_tabnew",
-			["P"] = { "toggle_preview", config = { use_float = true } },
+			["P"] = {
+				"toggle_preview",
+				config = {
+					use_float = true,
+					use_snacks_image = true,
+					title = " Neo-tree Preview",
+				},
+			},
 			["H"] = "toggle_hidden",
 		},
 	},

@@ -4,10 +4,10 @@ local M = {}
 vim.diagnostic.config({
 	signs = {
 		text = {
-			[vim.diagnostic.severity.ERROR] = " ",
-			[vim.diagnostic.severity.WARN] = " ",
-			[vim.diagnostic.severity.HINT] = " ",
-			[vim.diagnostic.severity.INFO] = " ",
+			[vim.diagnostic.severity.ERROR] = "",
+			[vim.diagnostic.severity.WARN] = "",
+			[vim.diagnostic.severity.HINT] = "",
+			[vim.diagnostic.severity.INFO] = "",
 		},
 	},
 	virtual_text = { prefix = "󱓻", spacing = 2, current_line = false },
@@ -25,10 +25,12 @@ vim.api.nvim_create_autocmd("CursorHold", {
 	end,
 })
 
+-- Capabilities de completion (blink.cmp) para todos os servidores
 vim.lsp.config("*", {
 	capabilities = require("blink.cmp").get_lsp_capabilities(),
 })
 
+-- Ao anexar um servidor: inlay hints, realce do símbolo e atalhos
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("user_lsp_attach", { clear = true }),
 	callback = function(args)
@@ -42,20 +44,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			vim.lsp.inlay_hint.enable(true, { bufnr = buf })
 		end
 
-		if client:supports_method("textDocument/documentHighlight") then
-			local group = vim.api.nvim_create_augroup("user_lsp_highlight_" .. buf, { clear = true })
-			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-				group = group,
-				buffer = buf,
-				callback = vim.lsp.buf.document_highlight,
-			})
-			vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-				group = group,
-				buffer = buf,
-				callback = vim.lsp.buf.clear_references,
-			})
-		end
-
 		if client.name == "ruff" then
 			client.server_capabilities.hoverProvider = false
 		end
@@ -63,6 +51,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 -- Code actions para Python e Javascript/Typescript
+-- chamado pelo conform antes de formatar
 M.on_save_kinds = {
 	"source.fixAll.eslint",
 	"source.fixAll.ruff",

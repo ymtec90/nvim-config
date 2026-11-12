@@ -22,20 +22,33 @@ return {
 	},
 
 	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		---@module "snacks"
+		---@type snacks.Config
+		opts = require("config.snacks").opts,
+		keys = require("config.snacks").keys,
+		init = require("config.snacks").init,
+	},
+
+	{
 		"nvim-treesitter/nvim-treesitter",
 		lazy = false,
 		build = ":TSUpdate",
-		opts = {
-			ensure_installed = {
+		config = function()
+			require("nvim-treesitter").install({
 				"vim",
 				"lua",
 				"vimdoc",
 				"html",
 				"css",
+				"scss",
 				"python",
 				"javascript",
 				"typescript",
 				"tsx",
+				"vue",
 				"htmldjango",
 				"yaml",
 				"markdown",
@@ -49,8 +62,16 @@ return {
 				"make",
 				"bash",
 				"zsh",
-			},
-		},
+				"regex",
+			})
+			vim.api.nvim_create_autocmd("FileType", {
+				callback = function(a)
+					if pcall(vim.treesitter.start, a.buf) then
+						vim.bo[a.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+					end
+				end,
+			})
+		end,
 	},
 
 	{
@@ -431,9 +452,9 @@ return {
 		},
 		cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
 		keys = {
-			{ "<leader>ca", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, desc = "IA Ações" },
-			{ "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "IA Chat" },
-			{ "<leader>cg", "<cmd>CodeCompanion /commit_padrao<cr>", mode = "n", desc = "IA Gerar Commit" },
+			{ "<leader>Ca", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, desc = "IA Ações" },
+			{ "<leader>Cc", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "IA Chat" },
+			{ "<leader>GA", "<cmd>CodeCompanion /commit_padrao<cr>", mode = "n", desc = "IA Gerar Commit" },
 		},
 		config = function()
 			require("config.codecompanion")

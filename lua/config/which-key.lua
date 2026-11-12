@@ -38,7 +38,7 @@ wk.add({
 		"<leader>fh",
 		"<cmd>Telescope help_tags<cr>",
 		desc = "Tags de Ajuda",
-		icon = { icon = "󰋖", color = "orange" },
+		icon = { icon = "", color = "orange" },
 	},
 	{
 		"<leader>fo",
@@ -47,9 +47,25 @@ wk.add({
 		icon = { icon = "󰋚", color = "purple" },
 	},
 
+	-- Grupo de mappings para gestão de repositório
+	{ "<leader>G", group = "Git", icon = { icon = "", color = "orange" } },
+	{
+		"<leader>GA",
+		"<cmd>CodeCompanion /commit_padrao<cr>",
+		mode = "n",
+		desc = "IA Gerar Commit",
+		icon = { icon = "", color = "blue" },
+	},
+
+	-- Grupo de mappings para gestão de repositório
+	{ "<leader>O", group = "Octo (Github)", icon = { icon = "", color = "grey" } },
+
+	-- Grupo de mappings para IA através do codecompanion
+	{ "<leader>C", group = "IA", icon = { icon = "󰫢", color = "blue" } },
+
 	-- Código / LSP & Conform
-	{ "<leader>c", group = "Código & LSP", icon = { icon = "", color = "blue" } },
-	{ "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", icon = { icon = "󱐋", color = "yellow" } },
+	{ "<leader>c", group = "Código, LSP & IA", icon = { icon = "", color = "blue" } },
+	{ "<leader>cA", vim.lsp.buf.code_action, desc = "Code Action", icon = { icon = "󱐋", color = "yellow" } },
 	{ "<leader>cr", vim.lsp.buf.rename, desc = "Renomear Símbolo", icon = { icon = "󰑕", color = "orange" } },
 	{
 		"<leader>cf",
@@ -175,13 +191,17 @@ wk.add({
 	},
 	{
 		"[d",
-		vim.diagnostic.jump({ count = -1 }),
+		function()
+			vim.diagnostic.jump({ count = -1, float = true })
+		end,
 		desc = "Diagnóstico Anterior",
 		icon = { icon = "󰒮", color = "blue" },
 	},
 	{
 		"]d",
-		vim.diagnostic.jump({ count = 1 }),
+		function()
+			vim.diagnostic.jump({ count = 1, float = true })
+		end,
 		desc = "Próximo Diagnóstico",
 		icon = { icon = "󰒭", color = "blue" },
 	},
@@ -190,8 +210,8 @@ wk.add({
 	{ "g", group = "Navegação / Definições", icon = { icon = "󰒕", color = "azure" } },
 	{ "gd", vim.lsp.buf.definition, desc = "Ir para Definição", icon = { icon = "󰅩", color = "blue" } },
 	{ "gD", vim.lsp.buf.declaration, desc = "Ir para Declaração", icon = { icon = "󰅩", color = "cyan" } },
-	{ "gi", vim.lsp.buf.implementation, desc = "Ir para Implementação", icon = { icon = "󰅩", color = "green" } },
-	{ "gr", vim.lsp.buf.references, desc = "Referências", icon = { icon = "󰅩", color = "yellow" } },
+	{ "gI", vim.lsp.buf.implementation, desc = "Ir para Implementação", icon = { icon = "󰅩", color = "green" } },
+	{ "gR", vim.lsp.buf.references, desc = "Referências", icon = { icon = "󰅩", color = "yellow" } },
 	{ "K", vim.lsp.buf.hover, desc = "Hover Docs", icon = { icon = "󰋖", color = "orange" } },
 
 	-- Explorer / Neo-tree
@@ -202,6 +222,7 @@ wk.add({
 		icon = { icon = "󰙅", color = "green" },
 	},
 	{
+
 		"<leader>o",
 		"<cmd>Neotree reveal<cr>",
 		desc = "Visualizar Arquivo no Explorer",
