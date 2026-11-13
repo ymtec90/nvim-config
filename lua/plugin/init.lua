@@ -180,6 +180,12 @@ return {
     },
 
     {
+        "j-hui/fidget.nvim",
+        event = "LspAttach",
+        opts = require("config.fidget").opts,
+    },
+
+    {
         "nvim-telescope/telescope.nvim",
         version = "*",
         dependencies = {
