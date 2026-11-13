@@ -33,13 +33,35 @@ return {
 	},
 
 	{
-		"sphamba/smear-cursor.nvim",
-		lazy = false,
-		opts = {
-			stiffness = 0.8,
-			trailing_stiffness = 0.5,
-			distance_stop_animation = 0.5,
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		event = { "BufReadPost", "BufNewFile" },
+		cmd = { "TodoQuickFix", "TodoLocList", "TodoTelescope" },
+		opts = {},
+		keys = {
+			{
+				"]t",
+				function()
+					require("todo-comments").jump_next()
+				end,
+				desc = "Próximo TODO",
+			},
+			{
+				"[t",
+				function()
+					require("todo-comments").jump_prev()
+				end,
+				desc = "TODO anterior",
+			},
 		},
+	},
+
+	{
+		"sphamba/smear-cursor.nvim",
+		event = "VeryLazy",
+		config = function()
+			require("config.smear-cursor")
+		end,
 	},
 
 	{
@@ -343,7 +365,7 @@ return {
 		"brianhuster/live-preview.nvim",
 		cmd = "LivePreview",
 		opts = {
-			port = 8081,
+			port = 8085,
 			browser = "default",
 		},
 		keys = {
@@ -390,6 +412,8 @@ return {
 			require("config.rb-delimiters")
 		end,
 	},
+
+	-- TODO: Adicionar suporte ao Markdown Preview no editor
 
 	{
 		"sindrets/diffview.nvim",
@@ -475,4 +499,6 @@ return {
 			require("config.codecompanion")
 		end,
 	},
+
+	-- TODO: Adicionar a configuração do Neorg
 }

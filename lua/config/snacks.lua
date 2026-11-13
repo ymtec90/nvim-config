@@ -1,5 +1,114 @@
 local M = {}
 
+-- Funções para auxiliar a coleta dos arquivos dos projetos
+-- recentes que possuam algum dos elementos destacados pelo plugin
+-- todo-comments.nvim para serem mostrados no Dashboard
+local todo_state = { status = "idle", items = {} } -- idle | loading | done
+
+local function todo_project_dirs(limit)
+	local dirs = {}
+	-- Mesma lógica da seção "projects" do Snacks (raiz git dos arquivos recentes)
+	for file in Snacks.dashboard.oldfiles() do
+		local dir = Snacks.git.get_root(file)
+		if dir and not vim.tbl_contains(dirs, dir) then
+			dirs[#dirs + 1] = dir
+			if #dirs >= limit then
+				break
+			end
+		end
+	end
+	return dirs
+end
+
+local function todo_load(opts, attempt)
+	attempt = attempt or 1
+	local ok, Search = pcall(require, "todo-comments.search") -- carrega o plugin via lazy.nvim
+	local Config = package.loaded["todo-comments.config"]
+	if not ok or not (Config and Config.loaded) then
+		if attempt <= 20 then -- o setup do todo-comments pode estar adiado alguns ms
+			return vim.defer_fn(function()
+				todo_load(opts, attempt + 1)
+			end, 50)
+		end
+		todo_state.status = "done"
+		return
+	end
+
+	local dirs = todo_project_dirs(opts.projects)
+	local results, pending = {}, #dirs
+	if pending == 0 then
+		todo_state.status = "done"
+		return
+	end
+
+	for i, dir in ipairs(dirs) do
+		Search.search(function(found)
+			results[i] = found
+			pending = pending - 1
+			if pending > 0 then
+				return
+			end
+
+			-- Agrupa por arquivo, preservando a ordem dos projetos recentes
+			local items, by_file = {}, {}
+			for p, dir_results in ipairs(results) do
+				local root = dirs[p]
+				for _, r in ipairs(dir_results) do
+					local file = vim.fs.normalize(r.filename)
+					local entry = by_file[file]
+					if entry then
+						entry.count = entry.count + 1
+					elseif #items < opts.limit then
+						local kw = Config.options.keywords[r.tag] or {}
+						local rel = file:sub(#root + 2)
+						entry = {
+							file = file,
+							count = 1,
+							icon = kw.icon or " ",
+							label = vim.fn.fnamemodify(root, ":t") .. "/" .. rel,
+							lnum = r.lnum,
+							col = math.max((r.col or 1) - 1, 0),
+						}
+						by_file[file] = entry
+						items[#items + 1] = entry
+					end
+				end
+			end
+
+			todo_state.items = vim.tbl_map(function(e)
+				return {
+					icon = e.icon .. " ",
+					desc = e.count > 1 and ("%s (%d)"):format(e.label, e.count) or e.label,
+					autokey = true,
+					action = function()
+						vim.cmd.edit(vim.fn.fnameescape(e.file))
+						pcall(vim.api.nvim_win_set_cursor, 0, { e.lnum, e.col })
+					end,
+				}
+			end, items)
+			todo_state.status = "done"
+			Snacks.dashboard.update() -- re-renderiza o dashboard (no-op se já foi fechado)
+		end, { cwd = dir, disable_not_found_warnings = true })
+	end
+end
+
+---@param opts? {projects?:number, limit?:number}
+local function todo_projects_section(opts)
+	opts = vim.tbl_extend("force", { projects = 5, limit = 8 }, opts or {})
+	return function()
+		if todo_state.status == "idle" then
+			todo_state.status = "loading"
+			vim.schedule(function()
+				todo_load(opts)
+			end)
+		end
+		if todo_state.status == "loading" then
+			return { { icon = "󰔟 ", desc = "Buscando pendências…" } }
+		end
+		return todo_state.items
+	end
+end
+
 M.opts = {
 	-- Desliga LSP/treesitter/etc. em arquivos grandes
 	bigfile = { enabled = true, size = 1.5 * 1024 * 1024 },
@@ -36,6 +145,7 @@ M.opts = {
 			{ section = "keys", gap = 1, padding = 1 },
 			{ icon = " ", title = "Arquivos recentes", section = "recent_files", cwd = true, indent = 2, padding = 1 },
 			{ icon = " ", title = "Projetos", section = "projects", indent = 2, padding = 1 },
+			{ icon = " ", title = "Pendências de Projetos", indent = 2, padding = 1, todo_projects_section() },
 			{ section = "startup" },
 		},
 	},
@@ -76,6 +186,16 @@ M.keys = {
 		"<leader>bd",
 		function()
 			Snacks.bufdelete()
+			local buf = vim.api.nvim_get_current_buf()
+			if
+				vim.api.nvim_buf_get_name(buf) == ""
+				and vim.bo[buf].buftype == ""
+				and not vim.bo[buf].modified
+				and #vim.fn.getbufinfo({ buflisted = 1 }) == 1
+			then
+				---@diagnostic disable-next-line: missing-fields
+				Snacks.dashboard({ buf = buf, win = 0 })
+			end
 		end,
 		desc = "Fechar buffer",
 	},

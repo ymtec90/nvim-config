@@ -76,6 +76,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 setup_neotree_gruvbox_highlights()
 
 M.options = {
+	open_files_do_not_replace_types = { "terminal", "trouble", "qf", "edgy" },
 	sources = {
 		"filesystem",
 		"buffers",
