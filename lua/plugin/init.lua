@@ -379,7 +379,9 @@ return {
             browser = "default",
         },
         keys = {
-            { "<leader>lp", ":LivePreview<CR>", desc = "Iniciar Live Preview" },
+            { "<leader>lp", ":LivePreview start<CR>", desc = "Iniciar Live Preview" },
+            { "<leader>lP", ":LivePreview pick<CR>", desc = "Live Preview em..." },
+            { "<leader>lc", ":LivePreview close<CR>", desc = "Encerrar Live Preview" },
         },
     },
 
