@@ -61,10 +61,10 @@ wk.add({
 	{ "<leader>O", group = "Octo (Github)", icon = { icon = "", color = "grey" } },
 
 	-- Grupo de mappings para IA através do codecompanion
-	{ "<leader>C", group = "IA", icon = { icon = "󰫢", color = "blue" } },
+	{ "<leader>I", group = "IA", icon = { icon = "󰫢", color = "blue" } },
 
 	-- Código / LSP & Conform
-	{ "<leader>c", group = "Código, LSP & IA", icon = { icon = "", color = "blue" } },
+	{ "<leader>c", group = "Código & LSP", icon = { icon = "", color = "blue" } },
 	{ "<leader>cA", vim.lsp.buf.code_action, desc = "Code Action", icon = { icon = "󱐋", color = "yellow" } },
 	{ "<leader>cr", vim.lsp.buf.rename, desc = "Renomear Símbolo", icon = { icon = "󰑕", color = "orange" } },
 	{

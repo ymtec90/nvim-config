@@ -33,6 +33,16 @@ return {
 	},
 
 	{
+		"sphamba/smear-cursor.nvim",
+		lazy = false,
+		opts = {
+			stiffness = 0.8,
+			trailing_stiffness = 0.5,
+			distance_stop_animation = 0.5,
+		},
+	},
+
+	{
 		"nvim-treesitter/nvim-treesitter",
 		lazy = false,
 		build = ":TSUpdate",
@@ -452,8 +462,13 @@ return {
 		},
 		cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
 		keys = {
-			{ "<leader>Ca", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, desc = "IA Ações" },
-			{ "<leader>Cc", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "IA Chat" },
+			{ "<leader>Ia", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, desc = "IA Ações" },
+			{ "<leader>Ic", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "IA Chat" },
+			{ "<leader>IA", ":CodeCompanionChat Add<cr>", mode = "v", desc = "IA Mandar Seleção ao Chat" },
+			{ "<leader>Ir", ":CodeCompanionChat /revisar<cr>", mode = "v", desc = "IA Revisar Código" },
+			{ "<leader>Ir", ":CodeCompanionChat /explicar<cr>", mode = "v", desc = "IA Explicar Código" },
+			{ "<leader>Ir", ":CodeCompanionChat /gerar<cr>", mode = "v", desc = "IA Gerar Código (inline)" },
+			{ "<leader>Ir", ":CodeCompanionChat /testes<cr>", mode = "v", desc = "IA Gerar Testes" },
 			{ "<leader>GA", "<cmd>CodeCompanion /commit_padrao<cr>", mode = "n", desc = "IA Gerar Commit" },
 		},
 		config = function()

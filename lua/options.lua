@@ -7,6 +7,10 @@ if vim.fn.exists("+termguicolors") == 1 then
 	vim.opt.termguicolors = true
 end
 
+-- Transparência
+vim.api.nvim_set_hl(0, "normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "normal", { bg = "none" })
+
 -- Evita que o conceallevel esconda as aspas no JSON
 vim.opt.conceallevel = 0
 vim.g.vim_json_conceal = 0
