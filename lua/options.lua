@@ -1,15 +1,11 @@
 -- Truecolor
-if vim.fn.exists("+termguicolors") == 1 then
-	if vim.fn.has("nvim") == 0 then
-		vim.opt.t_8f = "\\[38;2;%lu;%lu;%lum"
-		vim.opt.t_8b = "\\[48;2;%lu;%lu;%lum"
-	end
-	vim.opt.termguicolors = true
+if vim.fn.exists "+termguicolors" == 1 then
+    if vim.fn.has "nvim" == 0 then
+        vim.opt.t_8f = "\\[38;2;%lu;%lu;%lum"
+        vim.opt.t_8b = "\\[48;2;%lu;%lu;%lum"
+    end
+    vim.opt.termguicolors = true
 end
-
--- Transparência
-vim.api.nvim_set_hl(0, "normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "normal", { bg = "none" })
 
 -- Evita que o conceallevel esconda as aspas no JSON
 vim.opt.conceallevel = 0
@@ -58,28 +54,28 @@ vim.opt.ttimeoutlen = 50
 vim.opt.wildmenu = true
 vim.opt.wildmode = "list:longest"
 vim.opt.wildignore = {
-	"*.docx",
-	"*.jpg",
-	"*.png",
-	"*.gif",
-	"*.pdf",
-	"*.pyc",
-	"*.exe",
-	"*.flv",
-	"*.img",
-	"*.xlsx",
-	"*/node_modules/*",
-	"*/.git/*",
-	"*/__pycache__/*",
-	"*/.venv/*",
-	"*/target/*",
+    "*.docx",
+    "*.jpg",
+    "*.png",
+    "*.gif",
+    "*.pdf",
+    "*.pyc",
+    "*.exe",
+    "*.flv",
+    "*.img",
+    "*.xlsx",
+    "*/node_modules/*",
+    "*/.git/*",
+    "*/__pycache__/*",
+    "*/.venv/*",
+    "*/target/*",
 }
 
 -- Clipboard: no macOS 'unnamed', caso contrário 'unnamedplus'
-if vim.fn.has("mac") == 1 then
-	vim.opt.clipboard = "unnamed"
+if vim.fn.has "mac" == 1 then
+    vim.opt.clipboard = "unnamed"
 else
-	vim.opt.clipboard = "unnamedplus"
+    vim.opt.clipboard = "unnamedplus"
 end
 
 -- Desabilitar Perl e Ruby já que eu não utilizo
