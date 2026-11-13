@@ -133,6 +133,8 @@ return {
         lazy = false,
         opts = {
             ensure_installed = {
+                "lua-language-server",
+                "stylua",
                 "vtsls",
                 "eslint-lsp",
                 "clangd",
@@ -140,6 +142,7 @@ return {
                 "intelephense",
                 "html-lsp",
                 "css-lsp",
+                "emmet-ls",
                 "json-lsp",
                 "yaml-language-server",
                 "taplo",
@@ -337,7 +340,7 @@ return {
 
     {
         "nvim-lualine/lualine.nvim",
-        dependecies = { "nvim-tree/nvim-web-devicons" },
+        dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             require "config.evil_lualine"
         end,
@@ -413,7 +416,7 @@ return {
 
     {
         "hiphish/rainbow-delimiters.nvim",
-        event = "User FilePost",
+        event = { "BufReadPost", "BufNewFile" },
         config = function()
             require "config.rb-delimiters"
         end,
@@ -515,9 +518,9 @@ return {
             { "<leader>Ic", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "IA Chat" },
             { "<leader>IA", ":CodeCompanionChat Add<cr>", mode = "v", desc = "IA Mandar Seleção ao Chat" },
             { "<leader>Ir", ":CodeCompanionChat /revisar<cr>", mode = "v", desc = "IA Revisar Código" },
-            { "<leader>Ir", ":CodeCompanionChat /explicar<cr>", mode = "v", desc = "IA Explicar Código" },
-            { "<leader>Ir", ":CodeCompanionChat /gerar<cr>", mode = "v", desc = "IA Gerar Código (inline)" },
-            { "<leader>Ir", ":CodeCompanionChat /testes<cr>", mode = "v", desc = "IA Gerar Testes" },
+            { "<leader>Ie", ":CodeCompanionChat /explicar<cr>", mode = "v", desc = "IA Explicar Código" },
+            { "<leader>Ig", ":CodeCompanionChat /gerar<cr>", mode = "v", desc = "IA Gerar Código (inline)" },
+            { "<leader>It", ":CodeCompanionChat /testes<cr>", mode = "v", desc = "IA Gerar Testes" },
             { "<leader>GA", "<cmd>CodeCompanion /commit_padrao<cr>", mode = "n", desc = "IA Gerar Commit" },
         },
         config = function()
